@@ -1,4 +1,5 @@
 [![License](https://img.shields.io/badge/license-CC--BY--NC%204.0-green)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![arXiv](https://img.shields.io/badge/cs.CV-arxiv%3A2402.00627-red)](https://arxiv.org/abs/2402.00627)
 
 <p align="center">
 <img src="assets/logo.png" width="100">
@@ -6,7 +7,7 @@
 
 # CapHuman: Capture Your Moments in Parallel Universes
 
-[[Project Page]](https://caphuman.github.io/)
+[[Paper]](https://arxiv.org/abs/2402.00627) [[Project Page]](https://caphuman.github.io/)
 
 This is the repository for the paper *CapHuman: Capture Your Moments in Parallel Universes*.
 
