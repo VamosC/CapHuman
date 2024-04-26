@@ -1,0 +1,13 @@
+__pycache__/
+ckpts/*.ckpt
+ckpts/face-parsing
+data/FLAME_texture.npz
+data/deca_model.tar
+data/fixed_displacement_256.npy
+data/generic_model.pkl
+data/head_template.obj
+data/landmark_embedding.npy
+data/mean_texture.jpg
+data/texture_data_256.npy
+data/uv_face_eye_mask.png
+data/uv_face_mask.png
