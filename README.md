@@ -30,10 +30,16 @@ We concentrate on a novel human-centric image synthesis task, that is, given onl
 conda create -n caphuman python=3.7
 pip install -r requirements.txt
 ```
-Following [INSTALL](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) to install pytorch3d (e.g. 0.7.4, 0.7.6)
 
-Following [adobe-research/diffusion-rig](https://github.com/adobe-research/diffusion-rig?tab=readme-ov-file#deca-setup) for DECA setup.
+Follow [INSTALL](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) to install pytorch3d (e.g. 0.7.4, 0.7.6). We provide the [whl](https://huggingface.co/VamosC/CapHuman/resolve/main/pytorch3d-0.7.6-cp37-cp37m-linux_x86_64.whl) file.
 
+We provide the script to download data and models conveniently.
+
+```bash
+bash tools/setup.sh
+```
+
+Otherwise, follow [adobe-research/diffusion-rig](https://github.com/adobe-research/diffusion-rig?tab=readme-ov-file#deca-setup) for DECA setup.
 
 ```
 data/
@@ -49,7 +55,7 @@ data/
   uv_face_mask.png
 ```
 
-Download our checkpoint [caphuman.ckpt](https://huggingface.co/VamosC/CapHuman/tree/main), [vae-ft-mse-840000-ema-pruned.ckpt](https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.ckpt), [Realistic_Vision_V3.0.ckpt](https://huggingface.co/SG161222/Realistic_Vision_V3.0_VAE/resolve/main/Realistic_Vision_V3.0.ckpt), [79999_iter.pth](https://drive.google.com/open?id=154JgKpzCPW82qINcVieuPH3fZ2e0P812) and put them into ckpts.
+And, download our checkpoint [caphuman.ckpt](https://huggingface.co/VamosC/CapHuman/resolve/main/caphuman.ckpt), [vae-ft-mse-840000-ema-pruned.ckpt](https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.ckpt), [Realistic_Vision_V3.0.ckpt](https://huggingface.co/SG161222/Realistic_Vision_V3.0_VAE/resolve/main/Realistic_Vision_V3.0.ckpt), [79999_iter.pth](https://drive.google.com/open?id=154JgKpzCPW82qINcVieuPH3fZ2e0P812) and put them into ckpts.
 
 ```
 ckpts/
@@ -107,3 +113,5 @@ This project is under the CC-BY-NC 4.0 license. See [LICENSE](LICENSE) for detai
 - [comic-babes](https://civitai.com/models/20294/comic-babes)
 - [disney-pixar-cartoon-type-a](https://civitai.com/models/65203/disney-pixar-cartoon-type-a)
 - [toonyou](https://civitai.com/models/30240/toonyou)
+
+We sincerely thank [Zongxin Yang](https://z-x-yang.github.io/) for valuable discussions.

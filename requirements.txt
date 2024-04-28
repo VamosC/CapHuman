@@ -18,3 +18,4 @@ scikit-image
 yacs
 tqdm
 scikit-learn
+gradio==3.34.0

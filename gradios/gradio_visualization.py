@@ -289,7 +289,7 @@ if __name__ == '__main__':
                 pose_image = gr.Image(label="Reference Pose Image", source='upload', type="filepath")
                 prompt = gr.Textbox(label="Prompt", value='a photo of a person')
                 seed = gr.Slider(label="Seed", minimum=-1, maximum=4294967295, step=1, value=12345)
-                modes = gr.Textbox(label="Modes", value='tform,pose')
+                modes = gr.Textbox(label="Modes", value='position,pose')
                 run_button = gr.Button(label="Run")
                 with gr.Accordion("Advanced options", open=False):
                     num_samples = gr.Slider(label="Images", minimum=1, maximum=12, value=1, step=1)
