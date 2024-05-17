@@ -228,6 +228,8 @@ class DECA(nn.Module):
             opdict['alpha_images'] = ops['alpha_images']
             opdict['normal_images'] = ops['normal_images']
             opdict['albedo_images'] = ops['albedo_images']
+            opdict['landmarks2d'] = landmarks2d
+            opdict['landmarks3d'] = landmarks3d
 
         if self.cfg.model.use_tex:
             opdict['albedo'] = albedo

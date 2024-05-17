@@ -111,7 +111,7 @@ def create_inter_data(dataset, modes, meanshape_path=""):
             if "expression" in mode:
                 code["exp"] = code2["exp"]
                 code["pose"][:, 3:] = code2["pose"][:, 3:]
-            elif mode == "all":
+            if mode == "all":
                 code["pose"] = code2["pose"]
                 code["light"] = code2["light"]
                 code["exp"] = code2["exp"]
@@ -229,6 +229,7 @@ def get_args():
     parser.add_argument('--model', type=str, default='./models/cldm_v15.yaml', help='models')
     parser.add_argument('--vae_ckpt', type=str, default=None, help='path to vae ckpt')
     parser.add_argument('--control_ckpt', type=str, default=None)
+    parser.add_argument('--controlnet_strength', type=float, default=0.0)
     parser.add_argument('--input_image', type=str, default=None)
     parser.add_argument('--pose_image', type=str, default=None)
     parser.add_argument('--prompt', type=str, default=None)
@@ -284,6 +285,6 @@ if __name__ == '__main__':
     model = model.cuda()
     ddim_sampler = DDIMSampler(model)
 
-    images = process(args.input_image, args.pose_image, args.prompt, seed=args.seed)
+    images = process(**vars(args))
     os.makedirs(os.path.dirname(args.output_image), exist_ok=True)
     Image.fromarray(images[0]).save(args.output_image)
