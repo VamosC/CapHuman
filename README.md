@@ -92,6 +92,7 @@ If you are familiar with [stable-diffusion-webui](https://github.com/AUTOMATIC11
   author={Liang, Chao and Ma, Fan and Zhu, Linchao and Deng, Yingying and Yang, Yi},
   title={CapHuman: Capture Your Moments in Parallel Universes}, 
   booktitle={CVPR},
+  pages={6400--6409},
   year={2024}
 }
 ```

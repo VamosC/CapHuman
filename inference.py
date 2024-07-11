@@ -148,7 +148,7 @@ def create_inter_data(dataset, modes, meanshape_path=""):
             batch["landmarks2d"] = opdict['landmarks2d'].detach()
             yield batch
 
-def process(input_image, pose_image, prompt, a_prompt="", n_prompt="", num_samples=1, image_resolution=512, ddim_steps=20, strength=1.0, scale=7.0, seed=-1, eta=0.0, modes='position,pose', tau=0.0, controlnet_strength=0.0):
+def process(input_image, pose_image, prompt, a_prompt="", n_prompt="", num_samples=1, image_resolution=512, ddim_steps=20, strength=1.0, scale=7.0, seed=-1, eta=0.0, modes='position,pose', tau=0.0, controlnet_strength=0.0, *args, **kwargs):
 
     imagepath_list = [input_image, pose_image]
     dataset = deca_dataset.TestData(imagepath_list, iscrop=True, size=image_resolution)
@@ -286,5 +286,7 @@ if __name__ == '__main__':
     ddim_sampler = DDIMSampler(model)
 
     images = process(**vars(args))
-    os.makedirs(os.path.dirname(args.output_image), exist_ok=True)
+    dir_name = os.path.dirname(args.output_image)
+    if dir_name is not None and dir_name != '':
+        os.makedirs(dir_name, exist_ok=True)
     Image.fromarray(images[0]).save(args.output_image)
