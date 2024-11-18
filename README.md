@@ -29,19 +29,30 @@ We concentrate on a novel human-centric image synthesis task, that is, given onl
 ### Dependency
 
 ```bash
+git clone https://github.com/VamosC/CapHuman.git
+cd CapHuman
 conda create -n caphuman python=3.7
+conda activate caphuman
 pip install -r requirements.txt
+wget -c https://huggingface.co/VamosC/CapHuman/resolve/main/pytorch3d-0.7.6-cp37-cp37m-linux_x86_64.whl
+pip install pytorch3d-0.7.6-cp37-cp37m-linux_x86_64.whl
 ```
 
 Follow [INSTALL](https://github.com/facebookresearch/pytorch3d/blob/main/INSTALL.md) to install pytorch3d (e.g. 0.7.4, 0.7.6). We provide the [whl](https://huggingface.co/VamosC/CapHuman/resolve/main/pytorch3d-0.7.6-cp37-cp37m-linux_x86_64.whl) file.
 
-We provide the script to download data and models conveniently.
+#### Auto-download data and models with the script
+
+We provide the script to download data and models conveniently **(You must register at https://flame.is.tue.mpg.de/ and agree to the FLAME license terms first)**.
 
 ```bash
 bash tools/setup.sh
 ```
 
+#### Or manually download data and models 
+
 Otherwise, follow [adobe-research/diffusion-rig](https://github.com/adobe-research/diffusion-rig?tab=readme-ov-file#deca-setup) for DECA setup.
+
+The file structure looks like:
 
 ```
 data/
@@ -59,6 +70,8 @@ data/
 
 And, download our checkpoint [caphuman.ckpt](https://huggingface.co/VamosC/CapHuman/resolve/main/caphuman.ckpt), [vae-ft-mse-840000-ema-pruned.ckpt](https://huggingface.co/stabilityai/sd-vae-ft-mse-original/resolve/main/vae-ft-mse-840000-ema-pruned.ckpt), [Realistic_Vision_V3.0.ckpt](https://huggingface.co/SG161222/Realistic_Vision_V3.0_VAE/resolve/main/Realistic_Vision_V3.0.ckpt), [79999_iter.pth](https://drive.google.com/open?id=154JgKpzCPW82qINcVieuPH3fZ2e0P812) and put them into ckpts.
 
+The file structure looks like:
+
 ```
 ckpts/
   face-parsing/
@@ -69,6 +82,28 @@ ckpts/
 ```
 
 Note: you can download [comic-babes](https://civitai.com/models/20294/comic-babes), [disney-pixar-cartoon-type-a](https://civitai.com/models/65203/disney-pixar-cartoon-type-a), [toonyou](https://civitai.com/models/30240/toonyou) for different styles.
+
+Note: For **clip-vit-large-patch14**, it will be automatically downloaded if you specify `openai/clip-vit-large-patch14` in the `version` field like we do in the config file [models/cldm_v15.yaml](models/cldm_v15.yaml) (line 29 and line 92). If you cannot get it automatically, one of the alternatives: download the [files](https://huggingface.co/openai/clip-vit-large-patch14/tree/main), put them in the `ckpts/clip-vit-large-patch14` and then update the `version` field to the path `ckpts/clip-vit-large-patch14`.
+
+In this case, the file structure will look like:
+
+```
+ckpts/
+  face-parsing/
+    79999_iter.pth
+  caphuman.ckpt
+  Realistic_Vision_V3.0.ckpt
+  vae-ft-mse-840000-ema-pruned.ckpt
+  clip-vit-large-patch14/
+    merges.txt
+    model.safetensors
+    vocab.json
+    tokenizer_config.json
+    config.json
+    tokenizer.json
+    special_tokens_map.json
+    preprocessor_config.json
+```
 
 ## :camera_flash: Inference
 
