@@ -1,5 +1,6 @@
 __pycache__/
 ckpts/*.ckpt
+ckpts/*.pth
 ckpts/face-parsing
 data/FLAME_texture.npz
 data/deca_model.tar

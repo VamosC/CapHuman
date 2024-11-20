@@ -19,3 +19,4 @@ yacs
 tqdm
 scikit-learn
 gradio==3.34.0
+basicsr==1.4.2

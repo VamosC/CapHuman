@@ -121,6 +121,33 @@ python -m gradios.gradio_visualization --ckpt ckpts/caphuman.ckpt --vae_ckpt ckp
 
 If you are familiar with [stable-diffusion-webui](https://github.com/AUTOMATIC1111/stable-diffusion-webui), please refer to the extension [sd-webui-controlnet](https://github.com/VamosC/sd-webui-controlnet). Note: we make some modifications to support CapHuman.
 
+
+### With openpose controlnet
+
+<img src='./assets/example1.png' width=850>
+
+Download the checkpoint [control_v11p_sd15_openpose.pth](https://huggingface.co/lllyasviel/ControlNet-v1-1/resolve/main/control_v11p_sd15_openpose.pth) and put it in the ckpts.
+
+```bash
+python inference.py --ckpt ckpts/caphuman.ckpt --vae_ckpt ckpts/vae-ft-mse-840000-ema-pruned.ckpt --model models/cldm_v15.yaml --sd_ckpt ckpts/Realistic_Vision_V3.0.ckpt --input_image examples/input_images/196251.png --pose_image examples/pose_images/pose2.png --prompt "a photo of a man raising the hand, cyberpunk" --output_image examples/output_images/out2.png --control_ckpt ckpts/control_v11p_sd15_openpose.pth --controlnet_strength 1.0 --controlnet_mode "face,body,hand" --n_prompt "missing fingers"
+```
+
+The file structure looks like:
+
+```
+ckpts/
+  face-parsing/
+    79999_iter.pth
+  caphuman.ckpt
+  Realistic_Vision_V3.0.ckpt
+  vae-ft-mse-840000-ema-pruned.ckpt
+  control_v11p_sd15_openpose.pth
+  body_pose_model.pth
+  hand_pose_model.pth
+```
+
+Note: [body_pose_model.pth](https://huggingface.co/lllyasviel/ControlNet/resolve/main/annotator/ckpts/body_pose_model.pth) and [hand_pose_model.pth](https://huggingface.co/lllyasviel/ControlNet/resolve/main/annotator/ckpts/hand_pose_model.pth) will be automatically downloaded.
+
 ## :paperclip: Citation
 ```
 @inproceedings{liang2024caphuman,

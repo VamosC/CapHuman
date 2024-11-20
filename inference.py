@@ -19,6 +19,8 @@ from libs.decalib.deca import DECA
 from libs.decalib.utils.config import cfg as deca_cfg
 from libs.decalib.datasets import datasets as deca_dataset
 from libs.face_parsing import FaceParser
+from libs.controlnet.annotator.util import resize_image, HWC3
+from libs.controlnet.annotator.openpose import OpenposeDetector
 
 import argparse
 from facenet_pytorch import MTCNN, InceptionResnetV1
@@ -148,7 +150,7 @@ def create_inter_data(dataset, modes, meanshape_path=""):
             batch["landmarks2d"] = opdict['landmarks2d'].detach()
             yield batch
 
-def process(input_image, pose_image, prompt, a_prompt="", n_prompt="", num_samples=1, image_resolution=512, ddim_steps=20, strength=1.0, scale=7.0, seed=-1, eta=0.0, modes='position,pose', tau=0.0, controlnet_strength=0.0, *args, **kwargs):
+def process(input_image, pose_image, prompt, a_prompt="", n_prompt="", num_samples=1, image_resolution=512, ddim_steps=20, strength=1.0, scale=7.0, seed=-1, eta=0.0, modes='position,pose', tau=0.0, controlnet_strength=0.0, controlnet_mode='face,body', *args, **kwargs):
 
     imagepath_list = [input_image, pose_image]
     dataset = deca_dataset.TestData(imagepath_list, iscrop=True, size=image_resolution)
@@ -173,9 +175,21 @@ def process(input_image, pose_image, prompt, a_prompt="", n_prompt="", num_sampl
         landmark = draw_facepose(landmarks2d.squeeze().cpu().numpy().tolist(), H, W)
         landmark_map = Image.fromarray(landmark)
         if hasattr(model, 'pose_control_model'):
-            landmark = torch.from_numpy(landmark).float()/255.0
-            landmark = einops.rearrange(landmark, 'h w c -> c h w')
-            pose_control = landmark.unsqueeze(0)
+            pose_control = torch.zeros(num_samples, 3, H, W)
+            if 'body' in controlnet_mode:
+                estimate_hand = 'hand' in controlnet_mode
+                pose_image = np.array(Image.open(pose_image))
+                detected_map, _ = apply_openpose(resize_image(pose_image, image_resolution), hand=estimate_hand)
+                detected_map = HWC3(detected_map)
+                body_control = torch.from_numpy(detected_map.copy()).float() / 255.0
+                body_control = torch.stack([body_control for _ in range(num_samples)], dim=0)
+                body_control = einops.rearrange(body_control, 'b h w c -> b c h w')
+                pose_control += body_control
+            if 'face' in controlnet_mode:
+                face_control = torch.from_numpy(landmark).float()/255.0
+                face_control = torch.stack([face_control for _ in range(num_samples)], dim=0)
+                face_control = einops.rearrange(face_control, 'b h w c -> b c h w')
+                pose_control += face_control
             pose_control = pose_control.cuda()
 
         clip_image, vis_parsing = apply_faceparsing.parse(clip_image)
@@ -230,9 +244,12 @@ def get_args():
     parser.add_argument('--vae_ckpt', type=str, default=None, help='path to vae ckpt')
     parser.add_argument('--control_ckpt', type=str, default=None)
     parser.add_argument('--controlnet_strength', type=float, default=0.0)
+    parser.add_argument('--controlnet_mode', type=str, default='face,body')
     parser.add_argument('--input_image', type=str, default=None)
     parser.add_argument('--pose_image', type=str, default=None)
     parser.add_argument('--prompt', type=str, default=None)
+    parser.add_argument('--a_prompt', type=str, default="")
+    parser.add_argument('--n_prompt', type=str, default="")
     parser.add_argument('--seed', type=int, default=12345)
     parser.add_argument('--modes', type=str, default='position,pose')
     parser.add_argument('--output_image', type=str, default='examples/output_images/out1.png')
@@ -271,7 +288,9 @@ if __name__ == '__main__':
     if args.vae_ckpt is not None:
         missing_keys, unexpected_keys = model.first_stage_model.load_state_dict(load_state_dict(f'{args.vae_ckpt}', location='cuda'), strict=False)
 
-    if args.control_ckpt is not None:
+    if args.control_ckpt is not None and args.controlnet_strength != 0:
+        if 'body' in args.controlnet_mode:
+            apply_openpose = OpenposeDetector()
         pose_control_model = create_model(f'./models/controlnet/control_v11p_sd15_openpose.yaml').cpu()
         state_dict = load_state_dict(f'{args.control_ckpt}', location='cuda')
         my_state_dict = {}
